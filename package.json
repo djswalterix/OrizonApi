@@ -1,0 +1,15 @@
+{
+  "name": "travel_app",
+  "version": "1.0.0",
+  "description": "an application that provides api for a travel agency",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Walter Hoxha",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.2"
+  }
+}
