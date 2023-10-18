@@ -3,15 +3,11 @@ const Product = require("../model/product.model"); // Make sure the path is corr
 // Function to create a new product
 exports.createProduct = async (req, res) => {
   try {
-    console.log("create product");
     const { name } = req.body;
-
-    console.log("create product" + req.body);
     const newProduct = new Product({ name });
     const product = await newProduct.save();
     res.status(201).json(product);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Unable to create the product." });
   }
 };
@@ -19,7 +15,6 @@ exports.createProduct = async (req, res) => {
 // Function to get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    console.log("get all products");
     const products = await Product.find();
     res.json(products);
   } catch (error) {
@@ -70,7 +65,6 @@ exports.updateProduct = async (req, res) => {
 // Function to delete a product by name
 exports.deleteProduct = async (req, res) => {
   try {
-    console.log(req.params.email);
     const product = await Product.findOneAndRemove({ name: req.params.name });
     if (!product) {
       return res.status(404).json({ error: "Product not found." });

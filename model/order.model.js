@@ -7,7 +7,7 @@ const OrderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    ProductID: {
+    productID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: true,
@@ -15,6 +15,17 @@ const OrderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+OrderSchema.statics.findById = function (userID) {
+  return this.findOne({ userID: userID });
+};
+OrderSchema.statics.findByIdAndDate = function (userId, targetDate) {
+  return this.findOne({
+    userID: userId,
+    createdAt: {
+      $gte: targetDate,
+      $lt: new Date(targetDate.getTime() + 86400000), // Per cercare nella stessa data
+    },
+  });
+};
 module.exports = mongoose.model("Order", OrderSchema);
 /*order.model.js */

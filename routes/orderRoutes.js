@@ -12,13 +12,14 @@ router.get("/", orderController.getAllOrders);
 router.get("/all/:date", orderController.getAllOrdersbyDate);
 
 // Rotta per ottenere gli ordini per utente;
-router.get("/:user", orderController.getOrderByUser);
+router.get("/:userId", orderController.getOrderByUser);
 
 // Rotta per ottenere gli ordini per utente filtrati per data
-router.get("/:user/:date", orderController.getOrdersByUserAndDate);
+router.get("/:userId/:date", orderController.getOrdersByUserAndDate);
 
 // Rotta per aggiornare un ordine per id
 router.put("/:id", orderController.updateOrder);
 
 // Rotta per eliminare un prodotto per id
 router.delete("/:id", orderController.deleteOrder);
+module.exports = router;
