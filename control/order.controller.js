@@ -32,14 +32,8 @@ exports.getAllOrders = async (req, res) => {
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
-      user: {
-        name: order.userID.name,
-        surname: order.userID.surname,
-        email: order.userID.email,
-      },
-      product: {
-        name: order.productID.name,
-      },
+      user: order.userID,
+      product: order.productID,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
@@ -67,14 +61,9 @@ exports.getAllOrdersbyDate = async (req, res) => {
 
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
-      user: {
-        name: order.userID.name,
-        surname: order.userID.surname,
-        email: order.userID.email,
-      },
-      product: {
-        name: order.productID.name,
-      },
+      user: order.userID,
+      product: order.productID,
+
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
@@ -103,14 +92,9 @@ exports.getOrderByUser = async (req, res) => {
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
-      user: {
-        name: order.userID.name,
-        surname: order.userID.surname,
-        email: order.userID.email,
-      },
-      product: {
-        name: order.productID.name,
-      },
+      user: order.userID,
+      product: order.productID,
+
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
@@ -150,14 +134,9 @@ exports.getOrdersByUserAndDate = async (req, res) => {
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
-      user: {
-        name: order.userID.name,
-        surname: order.userID.surname,
-        email: order.userID.email,
-      },
-      product: {
-        name: order.productID.name,
-      },
+      user: order.userID,
+      product: order.productID,
+
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
