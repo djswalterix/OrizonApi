@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-// Sostituisci "your_database_url" con l'URL del tuo database MongoDB
-const dbvar = process.env.TEST_DB || "produzione";
-const dbUrl = `mongodb+srv://travelAdmin:DMtUGpoQ8HB18R92@cluster0.3sopro2.mongodb.net/${dbvar}?retryWrites=true&w=majority`;
+const dbUrl = `mongodb+srv://travelAdmin:DMtUGpoQ8HB18R92@cluster0.3sopro2.mongodb.net/produzione?retryWrites=true&w=majority`;
 
 // Opzioni di connessione
 const dbOptions = {
