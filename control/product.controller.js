@@ -16,7 +16,7 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve products." });
   }
@@ -32,7 +32,7 @@ exports.getProductByName = async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
-    res.json(product);
+    res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve the product." });
   }
@@ -56,7 +56,7 @@ exports.updateProduct = async (req, res) => {
 
     // Save
     const updatedProduct = await product.save();
-    res.json(updatedProduct);
+    res.status(200).json(updatedProduct);
   } catch (error) {
     res.status(500).json({ error: "Unable to update the product." });
   }
@@ -69,7 +69,7 @@ exports.deleteProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ error: "Product not found." });
     }
-    res.json(product);
+    res.status(200).json(product);
   } catch (error) {
     res.status(500).json({ error: "Unable to delete the product." });
   }

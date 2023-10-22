@@ -1,15 +1,25 @@
 const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
 const mocha = require("mocha");
 const mongoose = require("../config/dbTest");
 const sinon = require("sinon");
 const UserModel = require("../model/user.model");
 const UserController = require("../control/user.controller");
-const { pupulateData } = require("./populateData");
-const { done, fail } = require("@sinonjs/referee-sinon");
+chai.use(chaiAsPromised); // Use chai-as-promised
+//const { done, fail } = require("@sinonjs/referee-sinon");
+
 const usersData = [
   { name: "Alice", surname: "Rossi", email: "alice@example.com" },
-  { name: "Bob", surname: "Verdi", email: "bob@example.com" },
-  { name: "Charlie", surname: "Neri", email: "charlie@example.com" },
+  {
+    name: "Bob",
+    surname: "Verdi",
+    email: "bob@example.com",
+  },
+  {
+    name: "Charlie",
+    surname: "Neri",
+    email: "charlie@example.com",
+  },
 ];
 
 before(async () => {
@@ -42,7 +52,7 @@ describe("Test User Metods", async () => {
       chai.assert.equal(createdUser.email, req.body.email, "email created");
     } catch (error) {
       console.log("error!!" + error);
-      fail();
+      throw new Error(error);
     }
   });
 
@@ -66,6 +76,7 @@ describe("Test User Metods", async () => {
       chai.assert.isTrue(found, "alice found");
     } catch (error) {
       console.log("error!!" + error);
+      throw new Error(error);
     }
   });
 
@@ -88,6 +99,7 @@ describe("Test User Metods", async () => {
       chai.assert.equal(foundUser.email, "alice@example.com", "email found");
     } catch (error) {
       console.log("error!!" + error);
+      throw new Error(error);
     }
   });
 
@@ -103,6 +115,10 @@ describe("Test User Metods", async () => {
           email: "bobUpdated@example.com",
         },
       };
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.spy(),
+      };
       await UserController.updateUser(req, res);
       const UpdatedUser = res.json.getCall(0).args[0];
       chai.assert.equal(UpdatedUser.name, "NameUpdated", "name found");
@@ -114,6 +130,7 @@ describe("Test User Metods", async () => {
       );
     } catch (error) {
       console.log("error!!" + error);
+      throw new Error(error);
     }
   });
   it("Test deleteUser", async () => {
@@ -134,6 +151,7 @@ describe("Test User Metods", async () => {
       chai.assert.isNull(foundUser, "alice non trovato");
     } catch (error) {
       console.log("error!!" + error);
+      throw new Error(error);
     }
   });
 });

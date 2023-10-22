@@ -3,7 +3,7 @@ const Order = require("../model/order.model");
 exports.createOrder = async (req, res) => {
   try {
     const { productID, userID } = req.body;
-    console.log(productID + "|" + userID);
+    //console.log(productID + "|" + userID);
     if (productID || userID) {
       const newOrder = new Order({ userID, productID });
       const order = await newOrder.save();
@@ -28,7 +28,7 @@ exports.getAllOrders = async (req, res) => {
     const orders = await Order.find()
       .populate("userID", "name surname email")
       .populate("productID", "name");
-
+    /*
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
@@ -38,8 +38,8 @@ exports.getAllOrders = async (req, res) => {
       updatedAt: order.updatedAt,
       __v: order.__v,
     }));
-
-    res.json(formattedOrders);
+*/
+    res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve orders." });
   }
@@ -59,7 +59,7 @@ exports.getAllOrdersbyDate = async (req, res) => {
       .populate("userID")
       .populate("productID"); // Popola i campi associati
 
-    const formattedOrders = orders.map((order) => ({
+    /*const formattedOrders = orders.map((order) => ({
       _id: order._id,
       user: order.userID,
       product: order.productID,
@@ -67,20 +67,19 @@ exports.getAllOrdersbyDate = async (req, res) => {
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
-    }));
-
-    res.json(formattedOrders);
+    }));*/
+    res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve orders." });
   }
 };
 exports.getOrderByUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    if (!userId) {
+    const { userID } = req.params;
+    if (!userID) {
       return res.status(404).json({ error: "User not found." });
     }
-    const orders = await Order.find({ userID: userId })
+    const orders = await Order.find({ userID: userID })
       .populate("userID", "name surname email")
       .populate("productID", "name");
 
@@ -88,7 +87,7 @@ exports.getOrderByUser = async (req, res) => {
     if (!orders || orders.length === 0) {
       return res.status(404).json({ error: "No orders found for this user." });
     }
-
+    /*
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
@@ -99,8 +98,8 @@ exports.getOrderByUser = async (req, res) => {
       updatedAt: order.updatedAt,
       __v: order.__v,
     }));
-
-    res.json(formattedOrders);
+*/
+    res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: error + " unable to retrieve orders" });
   }
@@ -108,14 +107,14 @@ exports.getOrderByUser = async (req, res) => {
 
 exports.getOrdersByUserAndDate = async (req, res) => {
   try {
-    const { userId, date } = req.params;
-    if (!userId) {
+    const { userID, date } = req.params;
+    if (!userID) {
       return res.status(404).json({ error: "User not found." });
     }
 
     const targetDate = new Date(date);
     const orders = await Order.find({
-      userID: userId,
+      userID: userID,
       createdAt: {
         $gte: targetDate,
         $lt: new Date(targetDate.getTime() + 86400000),
@@ -130,7 +129,7 @@ exports.getOrdersByUserAndDate = async (req, res) => {
         error: "No orders found for this user on the specified date.",
       });
     }
-
+    /*
     // Modifica il formato dei dati per renderlo più comprensibile
     const formattedOrders = orders.map((order) => ({
       _id: order._id,
@@ -140,9 +139,9 @@ exports.getOrdersByUserAndDate = async (req, res) => {
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       __v: order.__v,
-    }));
+    }));*/
 
-    res.json(formattedOrders);
+    res.status(200).json(formattedOrders);
   } catch (error) {
     res.status(500).json({ error: error + " unable to retrieve orders" });
   }
@@ -150,17 +149,17 @@ exports.getOrdersByUserAndDate = async (req, res) => {
 
 exports.updateOrder = async (req, res) => {
   try {
-    const orderId = req.params.id;
+    const orderID = req.params.orderID;
     const updates = req.body;
-    const order = await Order.findOne({ _id: orderId });
+    const order = await Order.findOne({ _id: orderID });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found." }); // Modifica il messaggio di errore
     }
 
     // update
-    if (updates.userId) {
-      order.userID = updates.userId;
+    if (updates.userID) {
+      order.userID = updates.userID;
     }
 
     if (updates.productID) {
@@ -169,18 +168,18 @@ exports.updateOrder = async (req, res) => {
 
     // Save
     const updatedOrder = await order.save();
-    res.json(updatedOrder);
+    res.status(200).json(updatedOrder);
   } catch (error) {
     res.status(500).json({ error: error + " Unable to update the order." });
   }
 };
 exports.deleteOrder = async (req, res) => {
   try {
-    const order = await Order.findOneAndDelete({ _id: req.params.id });
+    const order = await Order.findOneAndDelete({ _id: req.params.orderID });
     if (!order) {
       return res.status(404).json({ error: error + " Order not found." });
     }
-    res.json(order);
+    res.status(200).json(order);
   } catch (error) {
     res.status(500).json({ error: error + " Unable to delete the order." });
   }
