@@ -1,11 +1,13 @@
 const User = require("../model/user.model"); // Make sure the path is correct
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 // Function to create a new user
 exports.createUser = async (req, res) => {
   try {
     //console.log("create user");
     const { name, surname, email } = req.body;
-    if (!email) {
+
+    if (!email || !emailRegex.test(email)) {
       throw new Error("Email not provided correctly");
     }
     //console.log("create user" + req.body);
@@ -21,7 +23,7 @@ exports.createUser = async (req, res) => {
 // Function to get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    console.log("get all users");
+    //console.log("get all users");
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
@@ -64,6 +66,9 @@ exports.updateUser = async (req, res) => {
       user.surname = updates.surname;
     }
     if (updates.email) {
+      if (!emailRegex.test(updates.email)) {
+        throw new Error("Email not provided correctly");
+      }
       user.email = updates.email;
     }
 
@@ -78,7 +83,7 @@ exports.updateUser = async (req, res) => {
 // Function to delete a user by email
 exports.deleteUser = async (req, res) => {
   try {
-    console.log(req.params.email);
+    //console.log(req.params.email);
     const user = await User.findOneAndRemove({ email: req.params.email });
     if (!user) {
       return res.status(404).json({ error: "User not found." });
