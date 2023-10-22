@@ -1,16 +1,8 @@
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
-[[redirects]]
-  force = true
-  from = "/api/*"
-  status = 200
-  to = "/.netlify/functions/api/:splat"
-echo Building Functions
 
 
-[build.environment]
-  NODE_VERSION = 18.18.0 # Specifica la versione di Node.js che desideri utilizzare
 
 [build.command]
   command = "npm install" # Installa le dipendenze
