@@ -2,7 +2,7 @@
   "name": "travel_app",
   "version": "1.0.0",
   "description": "an application that provides api for a travel agency",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha tests/**/*.test.js --recursive --reporter spec"
   },
