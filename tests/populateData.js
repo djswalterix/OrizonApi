@@ -1,6 +1,6 @@
-const User = require("./model/user.model"); // Sostituisci con il percorso corretto
-const Product = require("./model/product.model"); // Sostituisci con il percorso corretto
-const mongoose = require("./config/db"); // Includi il file di connessione al database
+const User = require("../model/user.model"); // Sostituisci con il percorso corretto
+const Product = require("../model/product.model"); // Sostituisci con il percorso corretto
+const mongoose = require("../config/dbTest"); // Includi il file di connessione al database
 
 const usersData = [
   { name: "Alice", surname: "Rossi", email: "alice@example.com" },
@@ -35,4 +35,4 @@ const populateData = async () => {
 };
 
 // Chiama la funzione per inserire i dati fittizi
-populateData();
+exports.populateData;

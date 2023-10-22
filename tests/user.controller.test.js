@@ -1,38 +1,45 @@
 const chai = require("chai");
-const { dropDb, mongoose } = require("../config/dbTest");
+const mocha = require("mocha");
+const mongoose = require("../config/dbTest");
 const sinon = require("sinon");
+const UserModel = require("../model/user.model");
+const UserController = require("../control/user.controller");
+const { pupulateData } = require("./populateData");
+const { done, fail } = require("@sinonjs/referee-sinon");
+const usersData = [
+  { name: "Alice", surname: "Rossi", email: "alice@example.com" },
+  { name: "Bob", surname: "Verdi", email: "bob@example.com" },
+  { name: "Charlie", surname: "Neri", email: "charlie@example.com" },
+];
 
-const User = require("../control/user.controller");
-const { deleteOne } = require("../model/user.model");
-const { fail } = require("@sinonjs/referee-sinon");
-
-let createdUser = {};
-
-describe("Test User Metods", () => {
+before(async () => {
+  await UserModel.insertMany(usersData);
+});
+describe("Test User Metods", async () => {
   it("Test createUser", async () => {
+    const testUsers = {
+      name: "Name",
+      surname: "Surname",
+      email: "example@example.com",
+    };
     try {
       const req = {
-        body: {
-          name: "Name",
-          surname: "Surname",
-          email: "example@example.com",
-        },
+        body: testUsers,
       };
       const res = {
         status: sinon.stub().returnsThis(),
         json: sinon.spy(),
       };
-      await User.createUser(req, res);
+      await UserController.createUser(req, res);
       sinon.assert.calledWith(res.status, 201);
-      const responseJson = res.json.getCall(0).args[0];
-      // Verifica che le proprietà dell'oggetto corrispondano a quelle richieste
-      chai.expect(responseJson).to.deep.include({
-        name: "Name",
-        surname: "Surname",
-        email: "example@example.com",
-      });
-
-      createdUser = responseJson;
+      const createdUser = await UserModel.findByEmail("example@example.com");
+      chai.assert.equal(createdUser.name, req.body.name, "name created");
+      chai.assert.equal(
+        createdUser.surname,
+        req.body.surname,
+        "surname created"
+      );
+      chai.assert.equal(createdUser.email, req.body.email, "email created");
     } catch (error) {
       console.log("error!!" + error);
       fail();
@@ -40,68 +47,93 @@ describe("Test User Metods", () => {
   });
 
   it("Test getAllUsers", async () => {
-    const req = {};
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
-    await User.getAllUsers(req, res);
-    sinon.assert.calledWith(res.status, 200);
-    const responseJson = res.json.getCall(0).args[0];
-    console.log("response " + responseJson);
-    console.log("crerated " + createdUser);
-    //chai.expect(responseJson).to.include(createdUser);
-    if (JSON.stringify(responseJson) === JSON.stringify(createdUser)) {
-      console.log("Gli oggetti sono uguali.");
-    } else {
-      console.log("Gli oggetti sono diversi.");
+    try {
+      const req = {};
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.spy(),
+      };
+      await UserController.getAllUsers(req, res);
+      sinon.assert.calledWith(res.status, 200);
+      const responseJson = res.json.getCall(0).args[0];
+      let found = false;
+      responseJson.forEach((us) => {
+        if (us.email == "alice@example.com") {
+          found = true;
+          //console.log(us.email);
+        }
+      });
+      chai.assert.isTrue(found, "alice found");
+    } catch (error) {
+      console.log("error!!" + error);
     }
-    chai.expect(responseJson).to.deep.include.members(createdUser);
   });
 
   it("Test getUserByEmail", async () => {
-    const req = {
-      params: {
-        email: "example@example.com",
-      },
-    };
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
-    await User.getUserByEmail(req, res);
-    sinon.assert.calledWith(res.status, 200);
-    chai.expect(JSON.stringify(res.json)).to.include(createdUser);
+    try {
+      const req = {
+        params: {
+          email: "alice@example.com",
+        },
+      };
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.spy(),
+      };
+      await UserController.getUserByEmail(req, res);
+      sinon.assert.calledWith(res.status, 200);
+      const foundUser = res.json.getCall(0).args[0];
+      chai.assert.equal(foundUser.name, "Alice", "name found");
+      chai.assert.equal(foundUser.surname, "Rossi", "surname found");
+      chai.assert.equal(foundUser.email, "alice@example.com", "email found");
+    } catch (error) {
+      console.log("error!!" + error);
+    }
   });
 
   it("Test updateUser", async () => {
-    const req = {
-      params: {
-        email: "example@example.com",
-      },
-      body: {
-        name: "NameUpdated",
-        surname: "SurnameUpdated",
-        email: "exampleUpdated@example.com",
-      },
-    };
-    let updatedUser = createdUser;
-    updatedUser.name = "NameUpdated";
-    updatedUser.surname = "SurnameUpdated";
-    updatedUser.email = "exampleUpdated@example.com";
-    console.log(updatedUser);
-    const res = {
-      status: sinon.stub().returnsThis(),
-      json: sinon.spy(),
-    };
-    await User.updateUser(req, res);
-    sinon.assert.calledWith(res.status, 200);
-    // Assicurati che updatedUser e res.json siano definiti
-    chai.expect(updatedUser()).to.be.an("object");
-    chai.expect(res.json).to.be.an("object");
-    chai
-      .expect(JSON.stringify(res.json))
-      .to.include(JSON.stringify(updatedUser));
-    //chai.expect(JSON.stringify(res.json)).not.to.include(createdUser);
+    try {
+      const req = {
+        params: {
+          email: "bob@example.com",
+        },
+        body: {
+          name: "NameUpdated",
+          surname: "SurnameUpdated",
+          email: "bobUpdated@example.com",
+        },
+      };
+      await UserController.updateUser(req, res);
+      const UpdatedUser = res.json.getCall(0).args[0];
+      chai.assert.equal(UpdatedUser.name, "NameUpdated", "name found");
+      chai.assert.equal(UpdatedUser.surname, "SurnameUpdated", "surname found");
+      chai.assert.equal(
+        UpdatedUser.email,
+        "bobUpdated@example.com",
+        "email found"
+      );
+    } catch (error) {
+      console.log("error!!" + error);
+    }
+  });
+  it("Test deleteUser", async () => {
+    try {
+      const req = {
+        params: {
+          email: "alice@example.com",
+        },
+      };
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.spy(),
+      };
+      await UserController.deleteUser(req, res);
+      sinon.assert.calledWith(res.status, 200);
+      const foundUser = await UserModel.findByEmail("alice@example.com");
+
+      chai.assert.isNull(foundUser, "alice non trovato");
+    } catch (error) {
+      console.log("error!!" + error);
+    }
   });
 });
