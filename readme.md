@@ -8,11 +8,12 @@
     <a href="https://github.com/djswalterix/orizon-api"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://tuo-sito-o-app-demo.com/">View Demo</a>
+
     ·
     <a href="https://github.com/djswalterix/orizon-api/issues">Report Bug</a>
     ·
     <a href="https://github.com/djswalterix/orizon-api/issues">Request Feature</a>
+
   </p>
 </div>
 
@@ -44,8 +45,6 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-
-![Screenshot](/public/images/Screenshot.png)
 
 The "Orizon Api" is a web application that provides the API for working with eco-friendly travels!
 
