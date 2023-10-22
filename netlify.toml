@@ -5,7 +5,6 @@
 
 
 [build.command]
-  command = "npm install" # Installa le dipendenze
   command = "node app.js" # Esegui il comando di build (se necessario)
 
 
