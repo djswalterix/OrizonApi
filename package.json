@@ -4,7 +4,8 @@
   "description": "an application that provides api for a travel agency",
   "main": "app.js",
   "scripts": {
-    "test": "mocha tests/**/*.test.js --recursive --reporter spec"
+    "test": "mocha tests/**/*.test.js --recursive --reporter spec",
+    "build": "node app.js"
   },
   "author": "Walter Hoxha",
   "license": "ISC",
