@@ -3,12 +3,12 @@ const User = require("../model/user.model"); // Make sure the path is correct
 // Function to create a new user
 exports.createUser = async (req, res) => {
   try {
-    console.log("create user");
+    //console.log("create user");
     const { name, surname, email } = req.body;
     if (!email) {
       throw new Error("Email not provided correctly");
     }
-    console.log("create user" + req.body);
+    //console.log("create user" + req.body);
     const newUser = new User({ name, surname, email });
     const user = await newUser.save();
     res.status(201).json(user);
@@ -23,7 +23,7 @@ exports.getAllUsers = async (req, res) => {
   try {
     console.log("get all users");
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve users." });
   }
@@ -39,7 +39,7 @@ exports.getUserByEmail = async (req, res) => {
       return res.status(404).json({ error: "User not found." });
     }
 
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "Unable to retrieve the user." });
   }
@@ -69,7 +69,7 @@ exports.updateUser = async (req, res) => {
 
     // Save
     const updatedUser = await user.save();
-    res.json(updatedUser);
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: "Unable to update the user." });
   }
@@ -83,7 +83,7 @@ exports.deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "Unable to delete the user." });
   }
