@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config();
 
-const dbUrl = `mongodb+srv://travelAdmin:DMtUGpoQ8HB18R92@cluster0.3sopro2.mongodb.net/produzione?retryWrites=true&w=majority`;
+const dbUrl = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 // Opzioni di connessione
 const dbOptions = {
